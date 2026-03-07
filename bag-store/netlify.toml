@@ -1,0 +1,28 @@
+# Déploiement Netlify - Boutique Sacs
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  publish = "frontend"
+  # Pas de commande build nécessaire (site statique)
+
+# Lien /admin vers la page admin
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# Headers pour cache et sécurité
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

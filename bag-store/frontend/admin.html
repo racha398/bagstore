@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Commandes sacs</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .admin-wrapper {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      .admin-header {
+        margin-bottom: 14px;
+      }
+      .admin-header h1 {
+        margin: 0 0 4px;
+        font-size: 1.25rem;
+      }
+      .admin-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+      .admin-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+      }
+      .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+      }
+      .admin-table thead {
+        position: sticky;
+        top: 0;
+        background: #f9f3ea;
+        z-index: 1;
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 6px 4px;
+        text-align: left;
+        border-bottom: 1px solid rgba(226, 217, 204, 0.6);
+      }
+      .admin-table th {
+        font-weight: 600;
+        font-size: 0.78rem;
+      }
+      .admin-tag {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: #f6eee4;
+        font-size: 0.75rem;
+      }
+      .admin-scroll {
+        max-height: 70vh;
+        overflow: auto;
+        margin-top: 8px;
+      }
+      .admin-empty {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        padding: 6px 2px;
+      }
+      .admin-gate {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      }
+      .admin-gate-box {
+        background: #fff;
+        padding: 24px;
+        border-radius: 16px;
+        max-width: 320px;
+        width: 90%;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      }
+      .admin-gate-box h2 { margin: 0 0 8px; font-size: 1.1rem; }
+      .admin-gate-box p { margin: 0 0 12px; font-size: 0.9rem; color: var(--text-muted); }
+      .admin-gate-box input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        font-size: 16px;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+      }
+      .admin-gate-box .btn-primary { width: 100%; }
+      .admin-gate-error { color: #c62828; font-size: 0.85rem; margin-top: 8px !important; }
+      @media (max-width: 640px) {
+        .admin-table thead {
+          display: none;
+        }
+        .admin-table,
+        .admin-table tbody,
+        .admin-table tr,
+        .admin-table td {
+          display: block;
+          width: 100%;
+        }
+        .admin-table tr {
+          margin-bottom: 10px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid rgba(226, 217, 204, 0.6);
+        }
+        .admin-table td {
+          border-bottom: none;
+          padding: 3px 0;
+        }
+        .admin-table td::before {
+          content: attr(data-label);
+          display: block;
+          font-weight: 600;
+          font-size: 0.75rem;
+          color: var(--text-muted);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="admin-gate" class="admin-gate" style="display: none;">
+      <div class="admin-gate-box">
+        <h2>Accès admin</h2>
+        <p>Entrez le mot de passe pour continuer.</p>
+        <input type="password" id="admin-password" placeholder="Mot de passe" autocomplete="off" />
+        <button type="button" class="btn-primary" id="admin-gate-btn">Entrer</button>
+        <p id="admin-gate-error" class="admin-gate-error" style="display: none;">Mot de passe incorrect.</p>
+      </div>
+    </div>
+    <div class="admin-wrapper" id="admin-content" style="display: none;">
+      <header class="admin-header">
+        <h1>Tableau de bord commandes</h1>
+        <p>Vue rapide de toutes les commandes reçues.</p>
+      </header>
+
+      <section class="admin-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+          <span class="admin-tag" id="order-count">0 commande</span>
+          <button
+            type="button"
+            class="btn-primary"
+            style="min-width: auto; padding-inline: 12px; box-shadow: none;"
+            id="refresh-btn"
+          >
+            Actualiser
+          </button>
+        </div>
+
+        <div class="admin-scroll">
+          <table class="admin-table" id="orders-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Nom</th>
+                <th>Téléphone</th>
+                <th>Ville</th>
+                <th>Adresse</th>
+                <th>Produits</th>
+                <th>Livraison</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="admin-empty" id="admin-empty">
+            Aucune commande pour le moment.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      function formatDate(isoString) {
+        if (!isoString) return "";
+        try {
+          const d = new Date(isoString);
+          return d.toLocaleString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        } catch {
+          return isoString;
+        }
+      }
+
+      function formatProductsCell(rawProduits) {
+        if (!rawProduits) return "";
+        let value = rawProduits;
+        try {
+          if (typeof rawProduits === "string") {
+            value = JSON.parse(rawProduits);
+          }
+        } catch {
+          return rawProduits;
+        }
+        if (!Array.isArray(value)) return "";
+        return value
+          .map(
+            (p) =>
+              (p.name || "") +
+              (p.color ? " (" + p.color + ")" : "") +
+              (p.quantity ? " x" + p.quantity : "")
+          )
+          .join(" · ");
+      }
+
+      async function loadOrders() {
+        const tbody = document.querySelector("#orders-table tbody");
+        const empty = document.getElementById("admin-empty");
+        const countLabel = document.getElementById("order-count");
+
+        tbody.innerHTML = "";
+        empty.style.display = "block";
+        countLabel.textContent = "Chargement...";
+
+        try {
+          const res = await fetch("/api/orders");
+          if (!res.ok) throw new Error("Erreur API");
+          const orders = await res.json();
+
+          if (!Array.isArray(orders) || orders.length === 0) {
+            countLabel.textContent = "0 commande";
+            return;
+          }
+
+          orders.forEach((o) => {
+            const tr = document.createElement("tr");
+            const produitsText = formatProductsCell(o.produits);
+            tr.innerHTML = `
+              <td data-label="Date">${formatDate(o.date_commande)}</td>
+              <td data-label="Nom">${(o.nom || "")} ${(o.prenom || "")}</td>
+              <td data-label="Téléphone">${o.telephone || ""}</td>
+              <td data-label="Ville">${o.ville || ""}</td>
+              <td data-label="Adresse">${o.adresse || ""}</td>
+              <td data-label="Produits">${produitsText}</td>
+              <td data-label="Livraison">${o.livraison || ""}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          empty.style.display = "none";
+          countLabel.textContent =
+            orders.length +
+            (orders.length > 1 ? " commandes" : " commande");
+        } catch (err) {
+          console.error(err);
+          countLabel.textContent = "Erreur de chargement";
+        }
+      }
+
+      const ADMIN_PASSWORD = "billelbillel";
+
+      function checkAdminAuth() {
+        if (sessionStorage.getItem("adminAuth") === "1") {
+          document.getElementById("admin-gate").style.display = "none";
+          document.getElementById("admin-content").style.display = "block";
+          return;
+        }
+        document.getElementById("admin-gate").style.display = "flex";
+        document.getElementById("admin-content").style.display = "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        checkAdminAuth();
+
+        const gate = document.getElementById("admin-gate");
+        const content = document.getElementById("admin-content");
+        const input = document.getElementById("admin-password");
+        const btn = document.getElementById("admin-gate-btn");
+        const err = document.getElementById("admin-gate-error");
+
+        if (gate.style.display === "flex") {
+          btn.addEventListener("click", () => {
+            if (input.value === ADMIN_PASSWORD) {
+              sessionStorage.setItem("adminAuth", "1");
+              gate.style.display = "none";
+              content.style.display = "block";
+              err.style.display = "none";
+              loadOrders();
+            } else {
+              err.style.display = "block";
+              setTimeout(() => { window.location.href = "index.html"; }, 1500);
+            }
+          });
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") btn.click();
+          });
+        } else {
+          loadOrders();
+        }
+        document.getElementById("refresh-btn").addEventListener("click", loadOrders);
+        if (content.style.display === "block") loadOrders();
+      });
+    </script>
+  </body>
+  </html>
+

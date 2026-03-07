@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boutique de Sacs</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">
+        <span class="brand-logo">S</span>
+        <div class="brand-text">
+          <h1 id="site-title">Sacs Élégants</h1>
+        </div>
+        <button type="button" class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="lang-switcher" id="lang-switcher">
+          <button type="button" class="lang-btn active" data-lang="fr" aria-label="Français">FR</button>
+          <button type="button" class="lang-btn" data-lang="ar" aria-label="العربية">العربية</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="intro">
+        <h2 id="intro-title">Choisissez votre sac préféré</h2>
+      </section>
+
+      <section class="products" id="products">
+        <!-- Products injected by script.js -->
+      </section>
+
+      <section class="cart">
+        <div class="cart-header">
+          <h2 id="cart-title">Votre panier</h2>
+          <span class="cart-count" id="cart-count">0 article</span>
+        </div>
+        <div id="cart-items" class="cart-items">
+          <p class="cart-empty" id="cart-empty-msg">Votre panier est vide.</p>
+        </div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            <span id="cart-total-label">Total:</span> <span id="cart-total">0 DA</span>
+          </div>
+          <button id="order-button" class="btn-primary" disabled>
+            Commander
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Order form overlay -->
+    <div class="overlay" id="order-overlay" aria-hidden="true">
+      <div class="overlay-content">
+        <button class="overlay-close" id="overlay-close" aria-label="Fermer">
+          ×
+        </button>
+        <h2 id="order-form-title">Informations de commande</h2>
+        <form id="order-form" class="order-form">
+          <div class="form-row">
+            <label for="nom" id="label-nom">Nom</label>
+            <input id="nom" name="nom" type="text" required />
+          </div>
+          <div class="form-row">
+            <label for="prenom" id="label-prenom">Prénom</label>
+            <input id="prenom" name="prenom" type="text" required />
+          </div>
+          <div class="form-row">
+            <label for="telephone" id="label-telephone">Numéro de téléphone</label>
+            <input
+              id="telephone"
+              name="telephone"
+              type="tel"
+              inputmode="tel"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <label for="ville" id="label-ville">Wilaya</label>
+            <select id="ville" name="ville" required>
+              <option value="">Choisir une wilaya</option>
+              <option value="Adrar">Adrar</option>
+              <option value="Aïn Defla">Aïn Defla</option>
+              <option value="Aïn Témouchent">Aïn Témouchent</option>
+              <option value="Alger">Alger</option>
+              <option value="Annaba">Annaba</option>
+              <option value="Batna">Batna</option>
+              <option value="Béchar">Béchar</option>
+              <option value="Béjaïa">Béjaïa</option>
+              <option value="Biskra">Biskra</option>
+              <option value="Blida">Blida</option>
+              <option value="Bordj Bou Arréridj">Bordj Bou Arréridj</option>
+              <option value="Bouira">Bouira</option>
+              <option value="Boumerdès">Boumerdès</option>
+              <option value="Chlef">Chlef</option>
+              <option value="Constantine">Constantine</option>
+              <option value="Djelfa">Djelfa</option>
+              <option value="El Bayadh">El Bayadh</option>
+              <option value="El Oued">El Oued</option>
+              <option value="El Tarf">El Tarf</option>
+              <option value="Ghardaïa">Ghardaïa</option>
+              <option value="Guelma">Guelma</option>
+              <option value="Illizi">Illizi</option>
+              <option value="Jijel">Jijel</option>
+              <option value="Khenchela">Khenchela</option>
+              <option value="Laghouat">Laghouat</option>
+              <option value="Mascara">Mascara</option>
+              <option value="Médéa">Médéa</option>
+              <option value="Mila">Mila</option>
+              <option value="Mostaganem">Mostaganem</option>
+              <option value="M'Sila">M'Sila</option>
+              <option value="Naâma">Naâma</option>
+              <option value="Oran">Oran</option>
+              <option value="Ouargla">Ouargla</option>
+              <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+              <option value="Relizane">Relizane</option>
+              <option value="Saïda">Saïda</option>
+              <option value="Sétif">Sétif</option>
+              <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+              <option value="Skikda">Skikda</option>
+              <option value="Souk Ahras">Souk Ahras</option>
+              <option value="Tamanrasset">Tamanrasset</option>
+              <option value="Tébessa">Tébessa</option>
+              <option value="Tiaret">Tiaret</option>
+              <option value="Tindouf">Tindouf</option>
+              <option value="Tipaza">Tipaza</option>
+              <option value="Tissemsilt">Tissemsilt</option>
+              <option value="Tizi Ouzou">Tizi Ouzou</option>
+              <option value="Tlemcen">Tlemcen</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="livraison" id="label-livraison">Type de livraison</label>
+            <select id="livraison" name="livraison" required>
+              <option value="Livraison à domicile">Livraison à domicile</option>
+              <option value="Point relais">Point relais</option>
+            </select>
+          </div>
+          <div class="form-row" id="adresse-row">
+            <label for="adresse" id="label-adresse">Adresse complète</label>
+            <textarea
+              id="adresse"
+              name="adresse"
+              rows="2"
+              required
+            ></textarea>
+          </div>
+          <div class="form-row">
+            <label for="remarque" id="label-remarque">Remarque (optionnel)</label>
+            <textarea
+              id="remarque"
+              name="remarque"
+              rows="2"
+              placeholder="Ex: couleur préférée, créneau de livraison..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full" id="submit-order-btn">
+            Confirmer la commande
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast / confirmation -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <footer class="site-footer">
+      <p id="footer-copyright" class="footer-copyright">© 2025 Sacs Élégants. Tous droits réservés.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
+
