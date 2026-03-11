@@ -7,8 +7,8 @@ const products = [
     id: 1,
     name: "Sac",
     nameAr: "حقيبة",
-    price: 3900,
-    originalPrice: 4500,
+    price: 2900,
+    originalPrice: 3500,
     colors: ["Noir", "Marron", "Bordeaux"],
     colorsAr: ["أسود", "بني", "بوردو"],
     images: {
@@ -51,6 +51,9 @@ const t = {
     toastAdded: "Produit ajouté au panier",
     toastMinOne: "Ajoutez au moins un produit.",
     toastAdresseRequired: "Veuillez renseigner l'adresse.",
+    toastRequiredFields: "Veuillez remplir tous les champs obligatoires.",
+    toastPhoneInvalid:
+      "Numéro de téléphone invalide. Il doit commencer par 05, 06 ou 07 et contenir 10 chiffres.",
     toastSuccess: "Commande envoyée avec succès",
     toastError: "Impossible d'envoyer la commande.",
     cartItemColor: "Couleur",
@@ -87,6 +90,9 @@ const t = {
     toastAdded: "تمت إضافة المنتج إلى السلة",
     toastMinOne: "أضف منتجاً واحداً على الأقل.",
     toastAdresseRequired: "يرجى إدخال العنوان.",
+    toastRequiredFields: "يرجى ملء جميع الخانات الإلزامية.",
+    toastPhoneInvalid:
+      "رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.",
     toastSuccess: "تم إرسال الطلب بنجاح",
     toastError: "تعذر إرسال الطلب.",
     cartItemColor: "اللون",
@@ -409,15 +415,41 @@ async function submitOrder(event) {
     return;
   }
 
+  const T = getT();
   const form = event.target;
+
+  const nom = form.nom.value.trim();
+  const prenom = form.prenom.value.trim();
+  const telephoneRaw = form.telephone.value.trim();
+  const ville = form.ville.value.trim();
+  const adresse = form.adresse.value.trim();
+  const livraison = form.livraison.value;
+  const remarque = form.remarque.value.trim();
+
+  if (!nom || !prenom || !telephoneRaw || !ville || !adresse || !livraison) {
+    showToast(T.toastRequiredFields);
+    return;
+  }
+
+  const telephoneDigits = telephoneRaw.replace(/\D/g, "");
+  const phonePattern = /^(05|06|07)\d{8}$/;
+  if (!phonePattern.test(telephoneDigits)) {
+    showToast(T.toastPhoneInvalid);
+    const telInput = document.getElementById("telephone");
+    if (telInput) {
+      telInput.focus();
+    }
+    return;
+  }
+
   const payload = {
-    nom: form.nom.value.trim(),
-    prenom: form.prenom.value.trim(),
-    telephone: form.telephone.value.trim(),
-    ville: form.ville.value.trim(),
-    adresse: form.adresse.value.trim(),
-    livraison: form.livraison.value,
-    remarque: form.remarque.value.trim(),
+    nom,
+    prenom,
+    telephone: telephoneDigits,
+    ville,
+    adresse,
+    livraison,
+    remarque,
     produits: cart.map((item) => ({
       id: item.id,
       name: item.name,
