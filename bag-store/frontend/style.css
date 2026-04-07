@@ -799,23 +799,41 @@ html[dir="rtl"] .overlay-close {
 }
 
 .checkout-catalog .products {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.checkout-catalog .product-card {
+  grid-template-columns: 1fr;
+}
+
+.checkout-catalog .product-image-wrapper {
+  min-height: 160px;
+  aspect-ratio: 1;
 }
 
 @media (min-width: 640px) {
   .checkout-page .checkout-catalog .products {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 700px) {
   .checkout-page .checkout-catalog .products {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: unset;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .checkout-catalog .products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .checkout-catalog .product-image-wrapper {
+    min-height: 120px;
   }
 }
 
