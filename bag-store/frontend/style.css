@@ -687,3 +687,145 @@ html[dir="rtl"] .overlay-close {
   }
 }
 
+/* Page commande deux colonnes (catalogue + fiche) */
+.checkout-page.main {
+  max-width: 1120px;
+}
+
+.checkout-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.checkout-panel {
+  position: sticky;
+  top: 70px;
+  padding: 14px 14px 16px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.checkout-panel-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.summary-block {
+  margin-bottom: 14px;
+}
+
+.summary-empty {
+  margin: 0;
+}
+
+.cart-summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 0.88rem;
+}
+
+.summary-line-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-line-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.summary-line-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.summary-line-price {
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-inline-end: 4px;
+}
+
+.summary-line-remove {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+}
+
+.summary-line-remove:hover {
+  background: #f2ebe2;
+}
+
+.checkout-totals-block {
+  margin: 14px 0 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.checkout-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+
+.checkout-total-row.grand {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.checkout-catalog .products {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .checkout-page .checkout-catalog .products {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 700px) {
+  .checkout-page .checkout-catalog .products {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+  }
+}
+
+@media (max-width: 900px) {
+  .checkout-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-panel {
+    position: static;
+  }
+}
+

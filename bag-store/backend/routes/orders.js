@@ -43,8 +43,23 @@ function buildOrderEmailHtml(order) {
         <li><strong>Nom :</strong> ${order.nom || ""} ${order.prenom || ""}</li>
         <li><strong>Téléphone :</strong> ${order.telephone || ""}</li>
         <li><strong>Ville (wilaya) :</strong> ${order.ville || ""}</li>
+        <li><strong>Commune :</strong> ${order.commune || ""}</li>
         <li><strong>Adresse :</strong> ${order.adresse || ""}</li>
         <li><strong>Type de livraison :</strong> ${order.livraison || ""}</li>
+        ${
+          order.frais_livraison != null
+            ? `<li><strong>Frais de livraison :</strong> ${Number(
+                order.frais_livraison
+              ).toLocaleString("fr-DZ")} DA</li>`
+            : ""
+        }
+        ${
+          order.total_commande != null
+            ? `<li><strong>Total commande :</strong> ${Number(
+                order.total_commande
+              ).toLocaleString("fr-DZ")} DA</li>`
+            : ""
+        }
       </ul>
 
       <h3>👜 Produits</h3>
@@ -82,6 +97,7 @@ function buildOrderEmailHtml(order) {
 
 // POST /api/orders
 router.post("/", (req, res) => {
+  const body = req.body || {};
   const {
     nom,
     prenom,
@@ -91,9 +107,26 @@ router.post("/", (req, res) => {
     livraison,
     produits,
     remarque,
-  } = req.body || {};
+  } = body;
+  const commune =
+    body.commune !== undefined && body.commune !== null
+      ? String(body.commune).trim()
+      : "";
 
-  if (!nom || !prenom || !telephone || !ville || !adresse || !livraison) {
+  const frais_livraison =
+    body.frais_livraison !== undefined &&
+    body.frais_livraison !== null &&
+    body.frais_livraison !== ""
+      ? Number(body.frais_livraison)
+      : null;
+  const total_commande =
+    body.total_commande !== undefined &&
+    body.total_commande !== null &&
+    body.total_commande !== ""
+      ? Number(body.total_commande)
+      : null;
+
+  if (!nom || !prenom || !telephone || !ville || !commune || !adresse || !livraison) {
     return res.status(400).json({ error: "Champs obligatoires manquants." });
   }
 
@@ -104,7 +137,7 @@ router.post("/", (req, res) => {
   const produitsJson = JSON.stringify(produits);
 
   const sql =
-    "INSERT INTO orders (nom, prenom, telephone, ville, adresse, livraison, produits, remarque) VALUES (?, ?, ?, ?, ?, ?, CAST(? AS JSON), ?)";
+    "INSERT INTO orders (nom, prenom, telephone, ville, commune, adresse, livraison, frais_livraison, total_commande, produits, remarque) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CAST(? AS JSON), ?)";
 
   pool.execute(
     sql,
@@ -113,8 +146,11 @@ router.post("/", (req, res) => {
       prenom,
       telephone,
       ville,
+      commune,
       adresse,
       livraison,
+      Number.isFinite(frais_livraison) ? frais_livraison : null,
+      Number.isFinite(total_commande) ? total_commande : null,
       produitsJson,
       remarque || null,
     ],
@@ -153,8 +189,15 @@ router.post("/", (req, res) => {
           prenom,
           telephone,
           ville,
+          commune,
           adresse,
           livraison,
+          frais_livraison: Number.isFinite(frais_livraison)
+            ? frais_livraison
+            : null,
+          total_commande: Number.isFinite(total_commande)
+            ? total_commande
+            : null,
           produits: JSON.parse(produitsJson),
           remarque,
         }),

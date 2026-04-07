@@ -42,158 +42,141 @@
       </div>
     </header>
 
-    <main class="main">
-      <section class="intro">
-        <h2 id="intro-title">Choisissez votre sac préféré</h2>
-      </section>
-
-      <section class="products" id="products">
-        <!-- Products injected by script.js -->
-      </section>
-
-      <section class="cart">
-        <div class="cart-header">
-          <h2 id="cart-title">Votre panier</h2>
-          <span class="cart-count" id="cart-count">0 article</span>
-        </div>
-        <div id="cart-items" class="cart-items">
-          <p class="cart-empty" id="cart-empty-msg">Votre panier est vide.</p>
-        </div>
-        <div class="cart-footer">
-          <div class="cart-total">
-            <span id="cart-total-label">Total:</span> <span id="cart-total">0 DA</span>
+    <main class="main checkout-page">
+      <div class="checkout-columns">
+        <section class="checkout-catalog">
+          <div class="intro">
+            <h2 id="intro-title">Catalogue</h2>
           </div>
-          <button id="order-button" class="btn-primary" disabled>
-            Commander
-          </button>
-        </div>
-      </section>
+          <div class="products" id="products"></div>
+        </section>
+
+        <aside class="checkout-panel">
+          <h2 class="checkout-panel-title" id="order-panel-title">Commande</h2>
+
+          <div class="summary-block">
+            <p class="cart-empty summary-empty" id="summary-empty-msg">Aucun article sélectionné</p>
+            <div id="cart-summary-items" class="cart-summary-items" hidden></div>
+          </div>
+
+          <form id="order-form" class="order-form">
+            <div class="form-row">
+              <label for="client_fullname">الاسم / Nom</label>
+              <input id="client_fullname" name="client_fullname" type="text" required autocomplete="name" />
+            </div>
+            <div class="form-row">
+              <label for="telephone">رقم الهاتف / Téléphone</label>
+              <input
+                id="telephone"
+                name="telephone"
+                type="tel"
+                inputmode="tel"
+                required
+              />
+            </div>
+            <div class="form-row">
+              <label for="ville">الولاية / Wilaya</label>
+              <select id="ville" name="ville" required>
+                <option value="">Choisir une wilaya</option>
+                <option value="Adrar">Adrar</option>
+                <option value="Chlef">Chlef</option>
+                <option value="Laghouat">Laghouat</option>
+                <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+                <option value="Batna">Batna</option>
+                <option value="Béjaïa">Béjaïa</option>
+                <option value="Biskra">Biskra</option>
+                <option value="Béchar">Béchar</option>
+                <option value="Blida">Blida</option>
+                <option value="Bouira">Bouira</option>
+                <option value="Tamanrasset">Tamanrasset</option>
+                <option value="Tébessa">Tébessa</option>
+                <option value="Tlemcen">Tlemcen</option>
+                <option value="Tiaret">Tiaret</option>
+                <option value="Tizi Ouzou">Tizi Ouzou</option>
+                <option value="Alger">Alger</option>
+                <option value="Djelfa">Djelfa</option>
+                <option value="Jijel">Jijel</option>
+                <option value="Sétif">Sétif</option>
+                <option value="Saïda">Saïda</option>
+                <option value="Skikda">Skikda</option>
+                <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+                <option value="Annaba">Annaba</option>
+                <option value="Guelma">Guelma</option>
+                <option value="Constantine">Constantine</option>
+                <option value="Médéa">Médéa</option>
+                <option value="Mostaganem">Mostaganem</option>
+                <option value="M'Sila">M'Sila</option>
+                <option value="Mascara">Mascara</option>
+                <option value="Ouargla">Ouargla</option>
+                <option value="Oran">Oran</option>
+                <option value="El Bayadh">El Bayadh</option>
+                <option value="Illizi">Illizi</option>
+                <option value="Bordj Bou Arréridj">Bordj Bou Arréridj</option>
+                <option value="Boumerdès">Boumerdès</option>
+                <option value="El Tarf">El Tarf</option>
+                <option value="Tindouf">Tindouf</option>
+                <option value="Tissemsilt">Tissemsilt</option>
+                <option value="El Oued">El Oued</option>
+                <option value="Khenchela">Khenchela</option>
+                <option value="Souk Ahras">Souk Ahras</option>
+                <option value="Tipaza">Tipaza</option>
+                <option value="Mila">Mila</option>
+                <option value="Aïn Defla">Aïn Defla</option>
+                <option value="Naâma">Naâma</option>
+                <option value="Aïn Témouchent">Aïn Témouchent</option>
+                <option value="Ghardaïa">Ghardaïa</option>
+                <option value="Relizane">Relizane</option>
+                <option value="Timimoun">Timimoun</option>
+                <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
+                <option value="Ouled Djellal">Ouled Djellal</option>
+                <option value="Béni Abbès">Béni Abbès</option>
+                <option value="In Salah">In Salah</option>
+                <option value="In Guezzam">In Guezzam</option>
+                <option value="Touggourt">Touggourt</option>
+                <option value="Djanet">Djanet</option>
+                <option value="El M'Ghair">El M'Ghair</option>
+                <option value="El Meniaa">El Meniaa</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="commune">البلدية / Commune</label>
+              <input id="commune" name="commune" type="text" required />
+            </div>
+            <div class="form-row">
+              <label for="adresse">العنوان / Adresse</label>
+              <textarea id="adresse" name="adresse" rows="2" required></textarea>
+            </div>
+            <div class="form-row">
+              <label for="livraison">طريقة التوصيل</label>
+              <select id="livraison" name="livraison" required>
+                <option value="Livraison à domicile">À domicile</option>
+                <option value="Stop Desk">Stop Desk</option>
+              </select>
+            </div>
+
+            <div class="checkout-totals-block">
+              <div class="checkout-total-row">
+                <span id="label-subtotal-products">Sous-total produits</span>
+                <span id="subtotal-products">0 DA</span>
+              </div>
+              <div class="checkout-total-row">
+                <span id="label-line-shipping">Livraison</span>
+                <span id="line-shipping">—</span>
+              </div>
+              <div class="checkout-total-row grand">
+                <span id="label-grand-total">Total</span>
+                <span id="grand-total">0 DA</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-full" id="submit-order-btn">
+              تأكيد الطلب / Confirmer la commande
+            </button>
+          </form>
+        </aside>
+      </div>
     </main>
 
-    <!-- Order form overlay -->
-    <div class="overlay" id="order-overlay" aria-hidden="true">
-      <div class="overlay-content">
-        <button class="overlay-close" id="overlay-close" aria-label="Fermer">
-          ×
-        </button>
-        <h2 id="order-form-title">Informations de commande</h2>
-        <form id="order-form" class="order-form">
-          <div class="form-row">
-            <label for="nom" id="label-nom">Nom</label>
-            <input id="nom" name="nom" type="text" required />
-          </div>
-          <div class="form-row">
-            <label for="prenom" id="label-prenom">Prénom</label>
-            <input id="prenom" name="prenom" type="text" required />
-          </div>
-          <div class="form-row">
-            <label for="telephone" id="label-telephone">Numéro de téléphone</label>
-            <input
-              id="telephone"
-              name="telephone"
-              type="tel"
-              inputmode="tel"
-              required
-            />
-          </div>
-          <div class="form-row">
-            <label for="ville" id="label-ville">Wilaya</label>
-            <select id="ville" name="ville" required>
-              <option value="">Choisir une wilaya</option>
-              <option value="Adrar">Adrar</option>
-              <option value="Chlef">Chlef</option>
-              <option value="Laghouat">Laghouat</option>
-              <option value="Oum El Bouaghi">Oum El Bouaghi</option>
-              <option value="Batna">Batna</option>
-              <option value="Béjaïa">Béjaïa</option>
-              <option value="Biskra">Biskra</option>
-              <option value="Béchar">Béchar</option>
-              <option value="Blida">Blida</option>
-              <option value="Bouira">Bouira</option>
-              <option value="Tamanrasset">Tamanrasset</option>
-              <option value="Tébessa">Tébessa</option>
-              <option value="Tlemcen">Tlemcen</option>
-              <option value="Tiaret">Tiaret</option>
-              <option value="Tizi Ouzou">Tizi Ouzou</option>
-              <option value="Alger">Alger</option>
-              <option value="Djelfa">Djelfa</option>
-              <option value="Jijel">Jijel</option>
-              <option value="Sétif">Sétif</option>
-              <option value="Saïda">Saïda</option>
-              <option value="Skikda">Skikda</option>
-              <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
-              <option value="Annaba">Annaba</option>
-              <option value="Guelma">Guelma</option>
-              <option value="Constantine">Constantine</option>
-              <option value="Médéa">Médéa</option>
-              <option value="Mostaganem">Mostaganem</option>
-              <option value="M'Sila">M'Sila</option>
-              <option value="Mascara">Mascara</option>
-              <option value="Ouargla">Ouargla</option>
-              <option value="Oran">Oran</option>
-              <option value="El Bayadh">El Bayadh</option>
-              <option value="Illizi">Illizi</option>
-              <option value="Bordj Bou Arréridj">Bordj Bou Arréridj</option>
-              <option value="Boumerdès">Boumerdès</option>
-              <option value="El Tarf">El Tarf</option>
-              <option value="Tindouf">Tindouf</option>
-              <option value="Tissemsilt">Tissemsilt</option>
-              <option value="El Oued">El Oued</option>
-              <option value="Khenchela">Khenchela</option>
-              <option value="Souk Ahras">Souk Ahras</option>
-              <option value="Tipaza">Tipaza</option>
-              <option value="Mila">Mila</option>
-              <option value="Aïn Defla">Aïn Defla</option>
-              <option value="Naâma">Naâma</option>
-              <option value="Aïn Témouchent">Aïn Témouchent</option>
-              <option value="Ghardaïa">Ghardaïa</option>
-              <option value="Relizane">Relizane</option>
-              <option value="Timimoun">Timimoun</option>
-              <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
-              <option value="Ouled Djellal">Ouled Djellal</option>
-              <option value="Béni Abbès">Béni Abbès</option>
-              <option value="In Salah">In Salah</option>
-              <option value="In Guezzam">In Guezzam</option>
-              <option value="Touggourt">Touggourt</option>
-              <option value="Djanet">Djanet</option>
-              <option value="El M'Ghair">El M'Ghair</option>
-              <option value="El Meniaa">El Meniaa</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label for="livraison" id="label-livraison">Type de livraison</label>
-            <select id="livraison" name="livraison" required>
-              <option value="Livraison à domicile">Livraison à domicile</option>
-              <option value="Point relais">Point relais</option>
-            </select>
-          </div>
-          <div class="form-row" id="adresse-row">
-            <label for="adresse" id="label-adresse">Adresse complète</label>
-            <textarea
-              id="adresse"
-              name="adresse"
-              rows="2"
-              required
-            ></textarea>
-          </div>
-          <div class="form-row">
-            <label for="remarque" id="label-remarque">Remarque (optionnel)</label>
-            <textarea
-              id="remarque"
-              name="remarque"
-              rows="2"
-              placeholder="Ex: couleur préférée, créneau de livraison..."
-            ></textarea>
-          </div>
-
-          <button type="submit" class="btn-primary btn-full" id="submit-order-btn">
-            Confirmer la commande
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Toast / confirmation -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <footer class="site-footer">
@@ -202,5 +185,4 @@
 
     <script src="script.js"></script>
   </body>
-  </html>
-
+</html>

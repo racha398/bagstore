@@ -8,7 +8,7 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
 });
 
-// Ensure orders table exists on startup
+// Ensure orders table exists on startup, puis colonne commune (bases créées avant cette colonne)
 pool.query(
   `CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,6 +18,9 @@ pool.query(
     ville VARCHAR(100),
     adresse TEXT,
     livraison VARCHAR(50),
+    commune VARCHAR(150),
+    frais_livraison INT NULL,
+    total_commande INT NULL,
     produits JSON,
     remarque TEXT,
     date_commande TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -25,9 +28,33 @@ pool.query(
   (err) => {
     if (err) {
       console.error("Erreur création table orders:", err);
-    } else {
-      console.log("Table orders prête.");
+      return;
     }
+    console.log("Table orders prête.");
+    pool.query(
+      "ALTER TABLE orders ADD COLUMN commune VARCHAR(150) NULL",
+      (e) => {
+        if (e && e.code !== "ER_DUP_FIELDNAME" && e.errno !== 1060) {
+          console.error("Erreur colonne commune:", e);
+        }
+        pool.query(
+          "ALTER TABLE orders ADD COLUMN frais_livraison INT NULL",
+          (e2) => {
+            if (e2 && e2.code !== "ER_DUP_FIELDNAME" && e2.errno !== 1060) {
+              console.error("Erreur colonne frais_livraison:", e2);
+            }
+            pool.query(
+              "ALTER TABLE orders ADD COLUMN total_commande INT NULL",
+              (e3) => {
+                if (e3 && e3.code !== "ER_DUP_FIELDNAME" && e3.errno !== 1060) {
+                  console.error("Erreur colonne total_commande:", e3);
+                }
+              }
+            );
+          }
+        );
+      }
+    );
   }
 );
 

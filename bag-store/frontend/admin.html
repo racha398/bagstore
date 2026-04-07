@@ -162,12 +162,16 @@
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Nom</th>
+                <th>Nom client</th>
                 <th>Téléphone</th>
-                <th>Ville</th>
+                <th>Wilaya</th>
+                <th>Commune</th>
                 <th>Adresse</th>
+                <th>Mode livraison</th>
                 <th>Produits</th>
-                <th>Livraison</th>
+                <th>Prix produits</th>
+                <th>Prix livraison</th>
+                <th>Total général</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -196,25 +200,44 @@
         }
       }
 
-      function formatProductsCell(rawProduits) {
-        if (!rawProduits) return "";
-        let value = rawProduits;
+      function parseProducts(rawProduits) {
+        if (!rawProduits) return [];
         try {
           if (typeof rawProduits === "string") {
-            value = JSON.parse(rawProduits);
+            return JSON.parse(rawProduits);
           }
+          return Array.isArray(rawProduits) ? rawProduits : [];
         } catch {
-          return rawProduits;
+          return [];
         }
-        if (!Array.isArray(value)) return "";
+      }
+
+      function formatProductsCell(rawProduits) {
+        const value = parseProducts(rawProduits);
+        if (!Array.isArray(value) || value.length === 0) return "";
         return value
-          .map(
-            (p) =>
-              (p.name || "") +
-              (p.color ? " (" + p.color + ")" : "") +
-              (p.quantity ? " x" + p.quantity : "")
-          )
+          .map((p) => {
+            let line = (p.name || "");
+            if (p.color) line += " (" + p.color + ")";
+            if (p.quantity && p.quantity > 1) line += " x" + p.quantity;
+            if (p.price != null) line += " — " + Number(p.price).toLocaleString("fr-DZ") + " DA";
+            return line;
+          })
           .join(" · ");
+      }
+
+      function calcPrixProduits(rawProduits, total_commande, frais_livraison) {
+        // Calcul depuis le JSON produits (plus fiable)
+        const produits = parseProducts(rawProduits);
+        if (produits.length > 0) {
+          const sum = produits.reduce((acc, p) => acc + (p.price || 0) * (p.quantity || 1), 0);
+          if (sum > 0) return sum;
+        }
+        // Fallback : total_commande - frais_livraison
+        if (total_commande != null && frais_livraison != null) {
+          return Number(total_commande) - Number(frais_livraison);
+        }
+        return null;
       }
 
       async function loadOrders() {
@@ -239,14 +262,19 @@
           orders.forEach((o) => {
             const tr = document.createElement("tr");
             const produitsText = formatProductsCell(o.produits);
+            const prixProduits = calcPrixProduits(o.produits, o.total_commande, o.frais_livraison);
             tr.innerHTML = `
               <td data-label="Date">${formatDate(o.date_commande)}</td>
-              <td data-label="Nom">${(o.nom || "")} ${(o.prenom || "")}</td>
+              <td data-label="Nom client">${(o.nom || "")} ${(o.prenom || "")}</td>
               <td data-label="Téléphone">${o.telephone || ""}</td>
-              <td data-label="Ville">${o.ville || ""}</td>
+              <td data-label="Wilaya">${o.ville || ""}</td>
+              <td data-label="Commune">${(o.commune && String(o.commune).trim()) || "—"}</td>
               <td data-label="Adresse">${o.adresse || ""}</td>
+              <td data-label="Mode livraison">${o.livraison || ""}</td>
               <td data-label="Produits">${produitsText}</td>
-              <td data-label="Livraison">${o.livraison || ""}</td>
+              <td data-label="Prix produits">${prixProduits != null ? Number(prixProduits).toLocaleString("fr-DZ") + " DA" : "—"}</td>
+              <td data-label="Prix livraison">${o.frais_livraison != null ? Number(o.frais_livraison).toLocaleString("fr-DZ") + " DA" : "—"}</td>
+              <td data-label="Total général">${o.total_commande != null ? Number(o.total_commande).toLocaleString("fr-DZ") + " DA" : "—"}</td>
             `;
             tbody.appendChild(tr);
           });

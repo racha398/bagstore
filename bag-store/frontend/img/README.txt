@@ -5,5 +5,9 @@ Noms des fichiers à utiliser :
   - sac-marron.jpg  (couleur Marron)
   - sac-bordeaux.jpg (couleur Bordeaux)
 
+Cabas :
+  - cabas-beige.png (couleur Beige)
+  - cabas-noir.png (couleur Noir)
+
 Tu peux utiliser .jpg, .jpeg ou .png. Si tu utilises d'autres noms,
 modifie le tableau "images" dans frontend/script.js.
