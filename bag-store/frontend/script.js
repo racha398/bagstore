@@ -79,7 +79,7 @@ const products = [
   },
   {
     id: 2,
-    name: "Cabas",
+    name: "Caba",
     nameAr: "حقيبة سفر",
     price: 4900,
     colors: ["Beige", "Noir"],
@@ -428,6 +428,16 @@ function renderProducts() {
         color,
         quantity: qty,
       });
+      // Meta Pixel : AddToCart
+      if (typeof fbq === "function") {
+        fbq("track", "AddToCart", {
+          content_name: product.name,
+          content_ids: [String(product.id)],
+          content_type: "product",
+          value: product.price * qty,
+          currency: "DZD",
+        });
+      }
     });
 
     container.appendChild(card);
@@ -515,6 +525,15 @@ async function submitOrder(event) {
     if (!res.ok) throw new Error("Erreur serveur");
 
     showToast(getT().toastSuccess);
+    // Meta Pixel : Purchase
+    if (typeof fbq === "function") {
+      fbq("track", "Purchase", {
+        value: totalCommande,
+        currency: "DZD",
+        content_type: "product",
+        content_ids: cart.map((i) => String(i.id)),
+      });
+    }
     cart = [];
     renderCartSummary();
     form.reset();
