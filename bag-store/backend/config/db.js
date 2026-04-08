@@ -6,11 +6,6 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "bag_store",
   port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
 });
 
 // Ensure orders table exists on startup, puis colonne commune (bases créées avant cette colonne)
