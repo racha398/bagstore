@@ -624,11 +624,11 @@ html[dir="rtl"] .checkout-catalog .products > * {
   }
   .product-card {
     grid-template-columns: 1fr;
-    padding: 14px;
+    padding: 8px; /* Réduire le padding pour 2 colonnes sur mobile */
   }
   .product-image-wrapper {
-    min-height: 220px;
-    max-height: 280px;
+    min-height: 120px; /* Plus petit pour mobile 2 colonnes */
+    max-height: 180px;
   }
   .btn-primary {
     min-width: 100%;
@@ -827,9 +827,21 @@ html[dir="rtl"] .checkout-catalog .products > * {
 }
 
 @media (max-width: 639px) {
-  /* Sur très petit écran mobile on superpose les 2 produits */
   .checkout-catalog .products {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr; /* 2 colonnes même sur mobile */
+    gap: 8px; /* Espace réduit entre les deux produits sur smartphone */
+  }
+  .product-card .btn-primary {
+    padding: 8px 10px; /* Bouton un peu plus fin */
+    font-size: 0.85rem;
+  }
+  .quantity-btn {
+    width: 24px;
+    height: 24px;
+  }
+  .color-pill {
+    padding: 3px 6px;
+    font-size: 0.75rem;
   }
 }
 
